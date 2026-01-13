@@ -299,7 +299,7 @@
                     formData.append('report', file);
                     
                     console.log('🔄 调用分析API...');
-                    const response = await fetch('/api/analyze', {
+                    const response = await fetch('/', {
                         method: 'POST',
                         body: formData
                     });
