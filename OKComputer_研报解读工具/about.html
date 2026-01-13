@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 研报解读助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .hero-title {
+            font-family: 'Noto Serif SC', serif;
+        }
+        .nav-blur {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        .content-card {
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .faq-item {
+            transition: all 0.3s ease;
+        }
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .faq-content.open {
+            max-height: 200px;
+        }
+        .feature-icon {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full nav-blur border-b border-gray-200 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">研</span>
+                    </div>
+                    <span class="font-semibold text-gray-800 text-lg">研报解读助手</span>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-yellow-600 transition-colors">首页</a>
+                    <a href="result.html" class="text-gray-600 hover:text-yellow-600 transition-colors">示例</a>
+                    <a href="#" class="text-yellow-600 font-medium">关于</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16 min-h-screen">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <!-- 页面标题 -->
+            <div class="text-center mb-12">
+                <h1 class="hero-title text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+                    关于研报解读助手
+                </h1>
+                <p class="text-gray-600 text-lg max-w-3xl mx-auto">
+                    我们致力于打破专业金融知识的壁垒，让每一位投资者都能轻松理解券商研究报告的深层含义
+                </p>
+            </div>
+
+            <!-- 重要说明 -->
+            <div class="content-card rounded-xl p-6 mb-12 border-l-4 border-amber-400 bg-amber-50">
+                <div class="flex items-start">
+                    <svg class="w-6 h-6 text-amber-500 mt-1 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                        <h3 class="text-lg font-semibold text-amber-800 mb-2">当前版本说明</h3>
+                        <p class="text-amber-700 leading-relaxed">
+                            您现在看到的是<strong>演示版本</strong>，主要用于展示网站的功能和用户体验设计。
+                            当前展示的分析结果是基于《黄金定价》研报的固定示例，实际的文件上传和处理功能需要后端API支持。
+                            如需处理您自己的研报文件，请联系开发者获取完整版本或部署后端服务。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 功能介绍 -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">核心功能特色</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="step-card content-card rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 feature-icon rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">智能上传</h3>
+                        <p class="text-gray-600 text-sm">支持PDF、Word文档和图片格式，拖拽即可上传，自动识别研报内容</p>
+                    </div>
+
+                    <div class="step-card content-card rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 feature-icon rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">AI深度解读</h3>
+                        <p class="text-gray-600 text-sm">基于专业的解读prompt，将复杂的金融术语转化为通俗易懂的语言</p>
+                    </div>
+
+                    <div class="step-card content-card rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 feature-icon rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">数据提炼</h3>
+                        <p class="text-gray-600 text-sm">自动提取关键数据和逻辑转折点，帮助用户快速把握报告核心</p>
+                    </div>
+
+                    <div class="step-card content-card rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 feature-icon rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">全文覆盖</h3>
+                        <p class="text-gray-600 text-sm">严格遵循原文结构，确保每一个段落、每一个数据都得到详细解读</p>
+                    </div>
+
+                    <div class="step-card content-card rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 feature-icon rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">便捷分享</h3>
+                        <p class="text-gray-600 text-sm">支持导出PDF和复制链接，方便用户保存和分享解读结果</p>
+                    </div>
+
+                    <div class="step-card content-card rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 feature-icon rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">易懂语言</h3>
+                        <p class="text-gray-600 text-sm">使用高中生也能理解的语言，避免金融黑话，真正做到通俗易懂</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 使用步骤 -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">使用方法</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="space-y-8">
+                        <div class="step-card content-card rounded-xl p-6 flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold">1</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">上传研报文件</h3>
+                                <p class="text-gray-600 mb-3">在首页的文件上传区域，您可以通过拖拽或点击选择的方式上传研报文件。我们支持多种格式：</p>
+                                <ul class="text-sm text-gray-600 space-y-1 ml-4">
+                                    <li>• PDF格式：最常见的研报格式</li>
+                                    <li>• Word文档：.doc和.docx格式</li>
+                                    <li>• 图片格式：.jpg、.png等截图</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="step-card content-card rounded-xl p-6 flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold">2</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">等待AI分析</h3>
+                                <p class="text-gray-600 mb-3">文件上传后，我们的AI系统会自动开始分析研报内容。这个过程通常需要2-5分钟，具体时间取决于研报的长度和复杂程度。</p>
+                                <div class="bg-gray-50 rounded-lg p-3 text-sm text-gray-600">
+                                    💡 提示：您可以在等待期间查看示例解读，了解我们的解读风格
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-card content-card rounded-xl p-6 flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold">3</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">查看解读结果</h3>
+                                <p class="text-gray-600 mb-3">分析完成后，您将看到结构化的解读结果，包括：</p>
+                                <ul class="text-sm text-gray-600 space-y-1 ml-4">
+                                    <li>• <strong>核心总结</strong>：200字以内的全文核心观点</li>
+                                    <li>• <strong>原文对照</strong>：逐段展示原文内容</li>
+                                    <li>• <strong>通俗解读</strong>：每一段的详细解释</li>
+                                    <li>• <strong>重点提炼</strong>：关键数据和逻辑的深入分析</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="step-card content-card rounded-xl p-6 flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold">4</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">保存和分享</h3>
+                                <p class="text-gray-600 mb-3">您可以方便地保存和分享解读结果：</p>
+                                <ul class="text-sm text-gray-600 space-y-1 ml-4">
+                                    <li>• 导出为PDF文档，方便离线阅读</li>
+                                    <li>• 复制解读链接，分享给朋友</li>
+                                    <li>• 复制特定段落，用于讨论和引用</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 常见问题 -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">常见问题</h2>
+                <div class="max-w-4xl mx-auto space-y-4">
+                    <div class="faq-item content-card rounded-xl overflow-hidden">
+                        <button class="faq-trigger w-full p-6 text-left flex justify-between items-center hover:bg-gray-50">
+                            <span class="font-semibold text-gray-800">研报解读的准确性如何保证？</span>
+                            <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-6 pb-6">
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                我们的AI系统基于专业的金融分析prompt进行解读，严格遵循原文内容，不做任何主观判断或删减。解读的重点是将专业术语转化为通俗易懂的语言，而不是对投资建议进行评判。用户应该基于原文的专业分析做出自己的投资决策。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item content-card rounded-xl overflow-hidden">
+                        <button class="faq-trigger w-full p-6 text-left flex justify-between items-center hover:bg-gray-50">
+                            <span class="font-semibold text-gray-800">支持哪些文件格式？</span>
+                            <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-6 pb-6">
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                目前支持PDF、Word文档（.doc, .docx）以及常见的图片格式（.jpg, .png, .jpeg）。对于图片格式的研报，建议使用清晰度较高的截图以获得更好的识别效果。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item content-card rounded-xl overflow-hidden">
+                        <button class="faq-trigger w-full p-6 text-left flex justify-between items-center hover:bg-gray-50">
+                            <span class="font-semibold text-gray-800">解读需要多长时间？</span>
+                            <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-6 pb-6">
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                通常情况下，一份研报的解读需要2-5分钟。具体时间取决于研报的长度、复杂程度以及当前系统的处理负载。您可以在上传后查看示例解读，了解我们的服务质量。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item content-card rounded-xl overflow-hidden">
+                        <button class="faq-trigger w-full p-6 text-left flex justify-between items-center hover:bg-gray-50">
+                            <span class="font-semibold text-gray-800">是否会保存我的上传文件？</span>
+                            <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-6 pb-6">
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                我们高度重视用户隐私，所有上传的文件仅用于生成解读结果，不会永久保存。文件在处理完成后的一定时间内会自动删除，确保您的信息安全。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item content-card rounded-xl overflow-hidden">
+                        <button class="faq-trigger w-full p-6 text-left flex justify-between items-center hover:bg-gray-50">
+                            <span class="font-semibold text-gray-800">解读内容可以作为投资建议吗？</span>
+                            <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-6 pb-6">
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                解读内容仅供学习参考，不构成投资建议。投资决策应该基于您自己的风险承受能力和投资目标。我们建议您结合多方信息，理性投资，谨慎决策。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 联系信息 -->
+            <section class="text-center">
+                <div class="content-card rounded-xl p-8 max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">联系我们</h2>
+                    <p class="text-gray-600 mb-6">
+                        如果您在使用过程中遇到问题，或有任何建议和反馈，欢迎与我们联系
+                    </p>
+                    <div class="flex justify-center space-x-6">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="text-sm text-gray-600">邮箱</div>
+                            <div class="text-sm font-medium">support@yanbao助手.com</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                            </div>
+                            <div class="text-sm text-gray-600">微信</div>
+                            <div class="text-sm font-medium">YanbaoAssistant</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <div class="w-6 h-6 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-xs">研</span>
+                </div>
+                <span class="font-semibold">研报解读助手</span>
+            </div>
+            <p class="text-gray-400 text-sm">© 2025 研报解读助手. 让专业金融知识触手可及.</p>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ交互
+        document.querySelectorAll('.faq-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                const content = faqItem.querySelector('.faq-content');
+                const icon = this.querySelector('svg');
+                
+                // 切换当前项
+                if (content.classList.contains('open')) {
+                    content.classList.remove('open');
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    content.classList.add('open');
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // 页面加载动画
+        anime({
+            targets: '.step-card',
+            translateY: [50, 0],
+            opacity: [0, 1],
+            delay: anime.stagger(100),
+            duration: 800,
+            easing: 'easeOutQuart'
+        });
+
+        anime({
+            targets: '.faq-item',
+            translateY: [30, 0],
+            opacity: [0, 1],
+            delay: anime.stagger(50, {start: 300}),
+            duration: 600,
+            easing: 'easeOutQuart'
+        });
+    </script>
+</body>
+</html>
