@@ -1,0 +1,9 @@
+{
+  "functions": {
+    "server.js": { "runtime": "nodejs18.x" }
+  },
+  "routes": [
+    { "src": "/api/analyze", "dest": "/server.js" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}
