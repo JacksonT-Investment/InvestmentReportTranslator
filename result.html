@@ -319,7 +319,26 @@ displayResult(result, filename) {
     (data && data.summary) ? data.summary :
     (typeof data === "string" ? data : JSON.stringify(data, null, 2));
 
-  document.getElementById("summaryContent").textContent = summary;
+  let summaryText = summary;
+
+// 1) 如果 summary 本身是 JSON 字符串，尝试解析取里面字段
+try {
+  const obj = JSON.parse(summary);
+  summaryText =
+    obj?.analysis ||
+    obj?.data?.analysis ||
+    obj?.data?.summary ||
+    obj?.summary ||
+    summary;
+} catch (e) {}
+
+// 2) 反转义，把 \n 变成换行
+summaryText = String(summaryText)
+  .replace(/\\n/g, "\n")
+  .replace(/\\"/g, '"');
+
+document.getElementById("summaryContent").textContent = summaryText;
+
 
   // sections 渲染：有就按段落渲染；没有就全文展示
   if (data && Array.isArray(data.sections) && data.sections.length > 0) {
