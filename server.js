@@ -78,7 +78,7 @@ app.get('/about', (req, res) => {
 });
 
 // API路由 - 核心分析功能
-app.post('/api/analyze', upload.single('report'), async (req, res) => {
+app.post('/', upload.single('report'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: '请上传文件' });
