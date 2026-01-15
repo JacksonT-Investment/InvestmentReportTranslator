@@ -266,35 +266,49 @@
                 this.setupAnimations();
             }
 
-            loadAnalysisResult() {
-                const analysisResult = sessionStorage.getItem('analysisResult');
-                const filename = sessionStorage.getItem('filename');
-                
-                if (analysisResult) {
-                    try {
-                        const result = JSON.parse(analysisResult);
-                        this.displayResult(result, filename);
-                    } catch (error) {
-                        console.error('解析分析结果失败:', error);
-                        this.showError('分析结果格式错误');
-                    }
-                } else {
-                    // 显示示例内容
-                    this.showExampleContent();
-                }
-            }
+escapeHtml(str) {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+loadAnalysisResult() {
+  const raw = sessionStorage.getItem("analysisResult");
+  const filename = sessionStorage.getItem("filename");
+
+  // 没拿到结果：显示示例
+  if (!raw) {
+    this.showExampleContent();
+    return;
+  }
+
+  // 关键：raw 可能不是 JSON！不要直接判死刑
+  let result;
+  try {
+    result = JSON.parse(raw);
+  } catch (e) {
+    // 当作纯文本结果兜底
+    result = { data: { summary: raw } };
+  }
+
+  this.displayResult(result, filename);
+}
 
 displayResult(result, filename) {
   // 隐藏加载状态
-  document.getElementById('loadingState').classList.add('hidden');
+  document.getElementById("loadingState").classList.add("hidden");
+  document.getElementById("errorState").classList.add("hidden");
 
   // 更新标题和文件信息
   if (filename) {
-    document.getElementById('reportTitle').textContent = `${filename} - 研报解读`;
-    document.getElementById('fileFormat').textContent = filename.split('.').pop().toUpperCase();
+    document.getElementById("reportTitle").textContent = `${filename} - 研报解读`;
+    document.getElementById("fileFormat").textContent = filename.split(".").pop().toUpperCase();
   }
 
-  // ===== 兜底解析：兼容不同返回结构 =====
+  // 兼容不同返回结构
   const data =
     (result && result.data) ? result.data :
     (result && result.result) ? result.result :
@@ -303,96 +317,75 @@ displayResult(result, filename) {
   // summary 兜底
   const summary =
     (data && data.summary) ? data.summary :
-    (typeof data === 'string' ? data : JSON.stringify(data, null, 2));
+    (typeof data === "string" ? data : JSON.stringify(data, null, 2));
 
-  document.getElementById('summaryContent').textContent = summary;
+  document.getElementById("summaryContent").textContent = summary;
 
-  // ===== sections 如果不存在，就不要再碰它 =====
+  // sections 渲染：有就按段落渲染；没有就全文展示
   if (data && Array.isArray(data.sections) && data.sections.length > 0) {
-    this.displayAnalysis({ sections: data.sections });
+    this.displayAnalysis(data); // 直接传 data（里面有 sections）
   } else {
-    // 没有 sections，就把全文当作“解读文本”展示
-    document.getElementById('analysisContent').innerHTML = `
+    document.getElementById("analysisContent").innerHTML = `
       <div class="interpretation-text rounded-lg p-4">
         <h5 class="font-semibold text-amber-800 mb-2">研报解读</h5>
-        <pre class="text-sm text-gray-700 whitespace-pre-wrap">${summary}</pre>
+        <pre class="text-sm text-gray-700 whitespace-pre-wrap">${this.escapeHtml(summary)}</pre>
       </div>
     `;
   }
 }
 
+displayAnalysis(data) {
+  // 关键兜底：避免 data 是 undefined 就炸
+  data = data || {};
+  const analysisContent = document.getElementById("analysisContent");
 
-            displayAnalysis(data) {
-                const analysisContent = document.getElementById('analysisContent');
-                
-                if (data.sections && data.sections.length > 0) {
-                    let html = '';
-                    
-                    data.sections.forEach((section, index) => {
-                        html += `
-                            <div class="mb-6">
-                                <h4 class="font-semibold text-gray-800 mb-3">第${index + 1}段分析</h4>
-                                
-                                <div class="original-text rounded-lg p-4 mb-4">
-                                    <h5 class="font-semibold text-blue-800 mb-2">原文</h5>
-                                    <p class="text-gray-700 text-sm leading-relaxed">${section.original || '原文内容'}</p>
-                                </div>
-                                
-                                <div class="interpretation-text rounded-lg p-4 mb-4">
-                                    <h5 class="font-semibold text-amber-800 mb-2">解读</h5>
-                                    <p class="text-gray-700 text-sm leading-relaxed">${section.interpretation || '解读内容'}</p>
-                                </div>
-                                
-                                <div class="key-point rounded-lg p-4">
-                                    <h5 class="font-semibold text-green-800 mb-2">重点提炼</h5>
-                                    <div class="space-y-1">
-                                        ${(section.keyPoints || ['要点1', '要点2', '要点3']).map(point => 
-                                            `<div class="flex items-start"><span class="highlight-number mr-2">●</span><span class="text-sm text-gray-700">${point}</span></div>`
-                                        ).join('')}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    analysisContent.innerHTML = html;
-                } else {
-                    // 显示默认分析内容
-                    analysisContent.innerHTML = `
-                        <div class="original-text rounded-lg p-4 mb-4">
-                            <h5 class="font-semibold text-blue-800 mb-2">原文示例</h5>
-                            <p class="text-gray-700 text-sm leading-relaxed">
-                                这是模拟的原文内容。在完整版本中，这里将显示您上传的研报原文。
-                            </p>
-                        </div>
-                        
-                        <div class="interpretation-text rounded-lg p-4 mb-4">
-                            <h5 class="font-semibold text-amber-800 mb-2">解读示例</h5>
-                            <p class="text-gray-700 text-sm leading-relaxed">
-                                这是模拟的解读内容。在完整版本中，这里将显示AI生成的通俗易懂解读。
-                            </p>
-                        </div>
-                        
-                        <div class="key-point rounded-lg p-4">
-                            <h5 class="font-semibold text-green-800 mb-2">重点提炼示例</h5>
-                            <div class="space-y-1">
-                                <div class="flex items-start">
-                                    <span class="highlight-number mr-2">●</span>
-                                    <span class="text-sm text-gray-700">示例要点1：这是重要的数据点</span>
-                                </div>
-                                <div class="flex items-start">
-                                    <span class="highlight-number mr-2">●</span>
-                                    <span class="text-sm text-gray-700">示例要点2：这是关键的逻辑转折</span>
-                                </div>
-                                <div class="flex items-start">
-                                    <span class="highlight-number mr-2">●</span>
-                                    <span class="text-sm text-gray-700">示例要点3：这是核心的投资启示</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-            }
+  if (Array.isArray(data.sections) && data.sections.length > 0) {
+    let html = "";
+
+    data.sections.forEach((section, index) => {
+      const original = this.escapeHtml(section?.original || "");
+      const interpretation = this.escapeHtml(section?.interpretation || "");
+      const keyPoints = Array.isArray(section?.keyPoints) ? section.keyPoints : [];
+
+      html += `
+        <div class="mb-6">
+          <h4 class="font-semibold text-gray-800 mb-3">第${index + 1}段分析</h4>
+
+          <div class="original-text rounded-lg p-4 mb-4">
+            <h5 class="font-semibold text-blue-800 mb-2">原文</h5>
+            <p class="text-gray-700 text-sm leading-relaxed">${original || "（无）"}</p>
+          </div>
+
+          <div class="interpretation-text rounded-lg p-4 mb-4">
+            <h5 class="font-semibold text-amber-800 mb-2">解读</h5>
+            <p class="text-gray-700 text-sm leading-relaxed">${interpretation || "（无）"}</p>
+          </div>
+
+          <div class="key-point rounded-lg p-4">
+            <h5 class="font-semibold text-green-800 mb-2">重点提炼</h5>
+            <div class="space-y-1">
+              ${
+                (keyPoints.length ? keyPoints : ["（未返回要点）"])
+                .map(p => `<div class="flex items-start"><span class="highlight-number mr-2">●</span><span class="text-sm text-gray-700">${this.escapeHtml(p)}</span></div>`)
+                .join("")
+              }
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    analysisContent.innerHTML = html;
+  } else {
+    // 没有 sections 就不要显示“示例内容”，直接保持为空或提示
+    analysisContent.innerHTML = `
+      <div class="text-sm text-gray-500">
+        （本次返回未包含分段 sections，已在上方“研报解读”中展示全文结果）
+      </div>
+    `;
+  }
+}
+
 
             showExampleContent() {
                 document.getElementById('loadingState').classList.add('hidden');
@@ -403,7 +396,7 @@ displayResult(result, filename) {
                     '这是演示版本的模拟分析结果。在完整版本中，这里将显示基于您上传研报的真实AI分析结果，包括核心观点、关键数据和投资建议。';
                 
                 // 显示示例分析内容
-                this.displayAnalysis({});
+                this.displayAnalysis({ sections: [] });
             }
 
             showError(message) {
