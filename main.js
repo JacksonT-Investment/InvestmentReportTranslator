@@ -97,7 +97,7 @@ class ReportAnalyzer {
             formData.append('report', file);
             
             // 调用后端API
-            const response = await fetch('http://localhost:3001/api/analyze', {
+            const response = await fetch('/api/analyze', {
                 method: 'POST',
                 body: formData
             });
