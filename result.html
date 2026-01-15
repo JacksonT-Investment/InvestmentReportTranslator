@@ -284,24 +284,43 @@
                 }
             }
 
-            displayResult(result, filename) {
-                // 隐藏加载状态
-                document.getElementById('loadingState').classList.add('hidden');
-                
-                // 更新标题和文件信息
-                if (filename) {
-                    document.getElementById('reportTitle').textContent = `${filename} - 研报解读`;
-                    document.getElementById('fileFormat').textContent = filename.split('.').pop().toUpperCase();
-                }
-                
-                // 显示核心总结
-                if (result.data && result.data.summary) {
-                    document.getElementById('summaryContent').textContent = result.data.summary;
-                }
-                
-                // 显示详细分析
-                this.displayAnalysis(result.data);
-            }
+displayResult(result, filename) {
+  // 隐藏加载状态
+  document.getElementById('loadingState').classList.add('hidden');
+
+  // 更新标题和文件信息
+  if (filename) {
+    document.getElementById('reportTitle').textContent = `${filename} - 研报解读`;
+    document.getElementById('fileFormat').textContent = filename.split('.').pop().toUpperCase();
+  }
+
+  // ===== 兜底解析：兼容不同返回结构 =====
+  const data =
+    (result && result.data) ? result.data :
+    (result && result.result) ? result.result :
+    result || {};
+
+  // summary 兜底
+  const summary =
+    (data && data.summary) ? data.summary :
+    (typeof data === 'string' ? data : JSON.stringify(data, null, 2));
+
+  document.getElementById('summaryContent').textContent = summary;
+
+  // ===== sections 如果不存在，就不要再碰它 =====
+  if (data && Array.isArray(data.sections) && data.sections.length > 0) {
+    this.displayAnalysis({ sections: data.sections });
+  } else {
+    // 没有 sections，就把全文当作“解读文本”展示
+    document.getElementById('analysisContent').innerHTML = `
+      <div class="interpretation-text rounded-lg p-4">
+        <h5 class="font-semibold text-amber-800 mb-2">研报解读</h5>
+        <pre class="text-sm text-gray-700 whitespace-pre-wrap">${summary}</pre>
+      </div>
+    `;
+  }
+}
+
 
             displayAnalysis(data) {
                 const analysisContent = document.getElementById('analysisContent');
