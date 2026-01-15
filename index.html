@@ -326,7 +326,7 @@
                     formData.append('report', file);
                     
                     console.log('🔄 调用分析API...');
-                    const response = await fetch('/', {
+                    const response = await fetch('/api/analyze', {
                         method: 'POST',
                         body: formData
                     });
@@ -343,7 +343,7 @@
                     sessionStorage.setItem('filename', file.name);
                     
                     // 跳转到结果页面
-                    window.location.href = '/result';
+                    window.location.href = '/result.html';
                     
                 } catch (error) {
                     console.error('❌ 上传失败:', error);
