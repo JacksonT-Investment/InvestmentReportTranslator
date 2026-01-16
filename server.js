@@ -239,8 +239,8 @@ ${textContent}`;
           content: prompt
         }
       ],
-      temperature: 0.3,
-      max_tokens: 2000
+      temperature: 0.2,
+      max_tokens: 3500
     }, {
       headers: {
         'Authorization': `Bearer ${process.env.KIMI_API_KEY}`,
@@ -279,25 +279,11 @@ ${textContent}`;
 
 // 解析Kimi API返回的内容
 function parseKimiResponse(content) {
-  try {
-    // 这里应该实现真正的解析逻辑
-    // 暂时返回结构化数据
-    return {
-      title: '研报分析结果',
-      summary: content.substring(0, 200) + '...',
-      sections: [
-        {
-          original: "原文内容",
-          interpretation: "解读内容",
-          keyPoints: ["要点1", "要点2", "要点3"]
-        }
-      ]
-    };
-  } catch (error) {
-    console.error('解析响应失败:', error);
-    throw error;
-  }
+  return {
+    analysis: content
+  };
 }
+
 
 // 错误处理中间件
 app.use((err, req, res, next) => {
