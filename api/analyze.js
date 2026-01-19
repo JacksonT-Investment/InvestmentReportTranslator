@@ -138,7 +138,7 @@ async function callKimi(prompt) {
 body: JSON.stringify({
   model,
   temperature: 0,                 // ✅ 降低随机性，减少跑偏
-  response_format: { type: "json_object" }, // ✅ 强制 JSON 输出（Moonshot 官方 chat 文档支持）
+  max_tokens: 6000,
   messages: [
     {
       role: "system",
@@ -195,19 +195,27 @@ module.exports = async function handler(req, res) {
     const prompt = buildPrompt(clipped);
     const analysis = await callKimi(prompt);
 
-    let parsed;
+    let parsed = null;
     try {
       parsed = JSON.parse(analysis);
     } catch (e) {
-      // 如果模型偶尔没返回合法 JSON，就把原始字符串也带回去方便排查
       parsed = null;
+    }
+
+    if (!parsed) {
+      return res.status(200).json({
+        success: false,
+        error: "模型未返回可解析的 JSON（后端 JSON.parse 失败）",
+        raw: analysis, // ✅ 关键：把模型原文吐回去
+      });
     }
 
     return res.status(200).json({
       success: true,
-      data: parsed || null,      // ✅ 规范：前端主要读 data
-      analysisRaw: parsed ? null : analysis, // ✅ 兜底：只有解析失败才返回 raw
+      data: parsed,
+      raw: analysis,
     });
+
 
   } catch (err) {
     return res.status(500).json({
