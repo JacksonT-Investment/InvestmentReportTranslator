@@ -195,10 +195,20 @@ module.exports = async function handler(req, res) {
     const prompt = buildPrompt(clipped);
     const analysis = await callKimi(prompt);
 
+    let parsed;
+    try {
+      parsed = JSON.parse(analysis);
+    } catch (e) {
+      // 如果模型偶尔没返回合法 JSON，就把原始字符串也带回去方便排查
+      parsed = null;
+    }
+
     return res.status(200).json({
       success: true,
-      analysis,
+      data: parsed || null,      // ✅ 规范：前端主要读 data
+      analysisRaw: parsed ? null : analysis, // ✅ 兜底：只有解析失败才返回 raw
     });
+
   } catch (err) {
     return res.status(500).json({
       success: false,
