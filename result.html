@@ -333,22 +333,28 @@ displayResult(result, filename) {
     return;
   }
 
-  // ===== 这里开始按你的 schema 渲染 =====
-  const summary = (typeof obj.summary === 'string') ? obj.summary.trim() : "";
-  const paragraphs = Array.isArray(obj.paragraphs) ? obj.paragraphs : [];
+// ===== 方案2：summary + analysis =====
+const summary = (typeof obj.summary === 'string') ? obj.summary.trim() : "";
+const analysisText = (typeof obj.analysis === 'string') ? obj.analysis.trim() : "";
 
-  // 核心总结：只放 summary
-  document.getElementById('summaryContent').textContent = summary || "（未返回 summary）";
+document.getElementById('summaryContent').textContent = summary || "（未返回 summary）";
 
-  // 详细分析：按 paragraphs 渲染
-  // 复用你已有 displayAnalysis，但它吃的是 sections，我们这里做个映射
-  const sections = paragraphs.map(p => ({
-    original: p.original || "",
-    interpretation: p.interpretation || "",
-    keyPoints: Array.isArray(p.keyPoints) ? p.keyPoints : []
-  }));
+// 把 analysis 渲染到详细分析区（按换行拆成段落）
+const analysisContent = document.getElementById("analysisContent");
 
-  this.displayAnalysis({ sections });
+if (analysisText) {
+  const blocks = analysisText
+    .split(/\n+/)
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  analysisContent.innerHTML = blocks
+    .map(p => `<p class="text-gray-700 leading-relaxed mb-3">${this.escapeHtml(p)}</p>`)
+    .join("");
+} else {
+  analysisContent.innerHTML = `<div class="text-sm text-gray-500">（未返回详细分析内容）</div>`;
+}
+
 }
 
 
@@ -397,11 +403,11 @@ displayAnalysis(data) {
     analysisContent.innerHTML = html;
   } else {
     // 没有 sections 就不要显示“示例内容”，直接保持为空或提示
-    analysisContent.innerHTML = `
-      <div class="text-sm text-gray-500">
-        （本次返回未包含分段 sections，已在上方“研报解读”中展示全文结果）
-      </div>
-    `;
+analysisContent.innerHTML = `
+  <div class="text-sm text-gray-500">
+    （本次返回未包含分段 paragraphs/sections，当前使用方案2：请看上面 summary + analysis 的渲染结果）
+  </div>
+`;
   }
 }
 
