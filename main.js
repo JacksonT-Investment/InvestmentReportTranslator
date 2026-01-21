@@ -110,7 +110,7 @@ class ReportAnalyzer {
             
             if (result.success) {
                 // 将结果存储到sessionStorage，供结果页面使用
-                sessionStorage.setItem('analysisResult', JSON.stringify(result));
+                sessionStorage.setItem('analysisResult', JSON.stringify(result.data || result));
                 sessionStorage.setItem('filename', file.name);
                 
                 // 跳转到结果页面
