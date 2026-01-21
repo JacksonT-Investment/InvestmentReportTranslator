@@ -75,6 +75,39 @@ async function extractTextFromUploadedFile(file) {
   return `【提示】暂不支持的文件类型：${file.mimetype || file.originalname || "unknown"}`;
 }
 
+function splitIntoParagraphs(rawText) {
+  // 统一换行
+  let t = String(rawText || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  // pdf-parse 常见问题：每行都换行。我们用“空行”来判断段落。
+  // 先把连续 3+ 换行压缩成 2 个
+  t = t.replace(/\n{3,}/g, "\n\n");
+
+  // 按空行切段
+  let blocks = t.split(/\n\s*\n/g).map(s => s.trim()).filter(Boolean);
+
+  // 如果 blocks 太少（说明没有空行分段），就按“单换行”做兜底合并
+  if (blocks.length <= 3) {
+    const lines = t.split("\n").map(s => s.trim());
+    const merged = [];
+    let buf = [];
+    for (const line of lines) {
+      if (!line) {
+        if (buf.length) {
+          merged.push(buf.join(" "));
+          buf = [];
+        }
+        continue;
+      }
+      buf.push(line);
+    }
+    if (buf.length) merged.push(buf.join(" "));
+    blocks = merged.filter(Boolean);
+  }
+
+  return blocks;
+}
+
 function buildPrompt(textContent) {
   return `
 研报解读工具 V3
@@ -103,17 +136,15 @@ function buildPrompt(textContent) {
   "summary": "200字以内的全文核心总结",
   "paragraphs": [
     {
-      "original": "（该段原文，一字不差）",
-      "interpretation": "（逐句还原后的白话整段）",
+      "interpretation": "（逐句还原后的白话整段，要像对朋友聊天一样，用生活化比喻把逻辑讲透）",
       "keyPoints": ["[关键点] ...", "[关键点] ...", "[关键点] ..."]
     }
   ]
 }
 
-【研报原文】
+【研报原文（已按自然段切分）】
 ${textContent}
-  `.trim();
-}
+
 
 async function callKimi(prompt) {
   const apiKey =
@@ -138,7 +169,7 @@ async function callKimi(prompt) {
 body: JSON.stringify({
   model,
   temperature: 0,                 // ✅ 降低随机性，减少跑偏
-  max_tokens: 6000,
+  max_tokens: 12000,
   messages: [
     {
       role: "system",
@@ -189,11 +220,17 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Avoid super long input for now (you can upgrade to chunking later)
-    const clipped = textContent.slice(0, 12000);
+const paragraphs = splitIntoParagraphs(textContent);
 
-    const prompt = buildPrompt(clipped);
-    const analysis = await callKimi(prompt);
+// 控制一下段落数量，避免超长（先保守 80 段，你后面可以再调大）
+const limitedParas = paragraphs.slice(0, 80);
+
+// 关键：把“段落数组”作为输入，让模型严格对齐输出 paragraphs 数量
+const promptInput = JSON.stringify(limitedParas, null, 0);
+
+const prompt = buildPrompt(promptInput);
+const analysis = await callKimi(prompt);
+
 
     let parsed = null;
     try {
